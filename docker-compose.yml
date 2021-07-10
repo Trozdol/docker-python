@@ -1,0 +1,24 @@
+version: '3.9'
+networks:
+    my-network:
+services:
+    web:
+        build: .
+        container_name: my-python-app
+        hostname: my-app
+        ports:
+            - 8080:5000
+        networks: 
+            my-network:
+        volumes:
+            - .:/code
+        environment:
+            FLASK_ENV: development
+    redis:
+        image: redis:alpine
+        container_name: my-redis-db
+        hostname: my-db
+        ports:
+            - 6379:6379
+        networks:
+            my-network:
