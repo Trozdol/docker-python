@@ -1,6 +1,11 @@
 version: '3.9'
+
 networks:
     my-network:
+
+volumes: 
+    mysql-data:
+
 services:
     web:
         build: .
@@ -17,8 +22,25 @@ services:
     redis:
         image: redis:alpine
         container_name: my-redis-db
-        hostname: my-db
+        hostname: my-redis-db
         ports:
             - 6379:6379
+        networks:
+            my-network:
+    mysql:
+        image: mysql/mysql-server
+        container_name: my-mysql-db
+        hostname: my-mysql-db
+        restart: always
+        command: --default-authentication-plugin=mysql_native_password
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_USER: MY_DB_USER
+            MYSQL_DATABASE: MY_DB
+            MYSQL_PASSWORD: MY_DB_PW
+        volumes:
+            - mysql-data:/var/lib/mysql
+        ports:
+            - 3306:3306
         networks:
             my-network:
